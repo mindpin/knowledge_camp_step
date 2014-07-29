@@ -1,0 +1,5 @@
+require "mongoid"
+require "sort_char"
+require "knowledge_camp/step/version"
+require "knowledge_camp/step"
+require "knowledge_camp/note"

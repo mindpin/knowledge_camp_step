@@ -19,12 +19,24 @@ $ bundle
 ```ruby
 class SomeStepOwnerModel
   include Mongoid::Document
-  include KnowledgeCamp::Step
+  include KnowledgeCamp::Step::Owner
+end
+
+class User
+  include Mongoid::Document
+  include KnowledgeCamp::Step::NoteCreator
 end
 
 instance = SomeStepOwnerModel.create
 
-instance.steps
+user = User.frist
+
+instance.steps #=> get related steps
+
+instance.notes #=> get model related notes
+
+user.notes #=> get creator related notes
+
 ```
 
 ## Contributing
