@@ -5,7 +5,7 @@ module KnowledgeCamp
     let(:model)   {Stepped.create}
     let(:creator) {User.create}
     let(:step)    {model.steps.create}
-    let(:note)    {step.notes.create(:creator => creator)}
+    let(:note)    {step.notes.create(:creator => creator, :content => "content", :kind => "whatever")}
 
     before {note}
 
