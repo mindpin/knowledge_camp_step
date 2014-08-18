@@ -1,5 +1,4 @@
 require "mongoid"
-require "sort_char"
 require "knowledge_camp/step/version"
 require "knowledge_camp/note"
 
@@ -9,7 +8,6 @@ module KnowledgeCamp
 
     include Mongoid::Document
     include Mongoid::Timestamps
-    include SortChar::Owner
 
     field :title,         :type => String
     field :desc,          :type => String
@@ -68,7 +66,7 @@ module KnowledgeCamp
       def self.included(base)
         base.has_many :steps,
                       :class_name => Step.name,
-                      :order      => "position asc",
+                      :order      => :id.asc,
                       :as         => :stepped
       end
 

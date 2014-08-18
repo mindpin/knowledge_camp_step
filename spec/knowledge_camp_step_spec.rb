@@ -19,12 +19,17 @@ module KnowledgeCamp
       }
     }}
 
-    before {note}
+    before {note;step1;step2;step3}
 
     it {expect(step1.stepped).to eq model}
     it {expect(note.creator).to eq creator}
     it {expect(model.notes).to include note}
     it {expect(creator.notes).to include note}
+    it {
+      expect(model.steps[0]).to eq step1
+      expect(model.steps[1]).to eq step2
+      expect(model.steps[2]).to eq step3
+    }
 
     context "when set wrong continue_type & continue value" do
       context "when wrong continue_type value" do
