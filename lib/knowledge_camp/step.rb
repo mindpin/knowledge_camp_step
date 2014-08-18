@@ -19,6 +19,8 @@ module KnowledgeCamp
 
     validate :validate_continue_and_continue_type
 
+    default_scope ->{order(:id.asc)}
+
     def validate_continue_and_continue_type
       return if continue_type.nil?
 
