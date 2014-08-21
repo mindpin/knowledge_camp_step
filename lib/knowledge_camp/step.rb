@@ -14,7 +14,7 @@ module KnowledgeCamp
     field :continue_type, :type => Symbol
     field :continue
 
-    has_many   :notes,   :class_name  => Note.name
+    has_many   :selections
     belongs_to :stepped, :polymorphic => true
 
     validate :validate_continue_and_continue_type
