@@ -1,46 +1,58 @@
 require "mongoid"
 require "knowledge_camp/step/version"
+require "knowledge_camp/block"
 require "knowledge_camp/note"
 
 module KnowledgeCamp
   class Step
-    CONTINUE_TYPES = [:end, :id, :select].freeze
-
     include Mongoid::Document
     include Mongoid::Timestamps
 
-    field :title,         :type => String
-    field :desc,          :type => String
-    field :continue_type, :type => Symbol
-    field :continue
+    field :title,       :type => String
+    field :continue,    :type => Hash,  :default => {}
+    field :block_order, :type => Array, :default => []
 
-    has_many   :selections
     belongs_to :stepped, :polymorphic => true
 
-    validate :validate_continue_and_continue_type
+    validate :validate_continue
 
     default_scope ->{order(:id.asc)}
 
-    def validate_continue_and_continue_type
-      return if continue_type.nil?
+    def add_content(kind, content)
+      block = Block.create(:kind => kind, :content => content)
+      self.block_order << block.id.to_s
+      self.save
+      block
+    end
 
-      if !CONTINUE_TYPES.include?(self.continue_type.to_sym)
-        return errors.add(:continue_type, "Invalid continue_type value!")
+    def blocks
+      self.block_order.map {|id| Block.find(id)}
+    end
+
+    def content_up(block_id)
+      move_content(:up, block_id)
+    end
+
+    def content_down(block_id)
+      move_content(:down, block_id)
+    end
+
+    def remove_content(block_id)
+      Block.find(block_id).destroy
+      self.block_order.delete(block_id)
+    end
+
+    def set_continue(*args)
+      case args[0]
+      when "step", :step
+        self.continue = {:type => :id, :id => args[1]}
+      when "select", :select
+        self.continue = {:type => :select}.merge(args[1])
+      when false, :end, "end"
+        self.continue = {:type => :end}
       end
 
-      message = case self.continue_type
-                when :end
-                  cond = self.continue == :end
-                  cond ? nil : "Invalid `:end' continue value!"
-                when :id
-                  cond = self.continue.is_a?(Hash) && self.continue[:id]
-                  cond ? nil : "Invalid `:id' continue value!"
-                when :select
-                  cond = self.continue.is_a?(Hash) && self.continue[:select]
-                  cond ? nil : "Invalid `:select' continue value!"
-                end
-
-      errors.add(:continue, message) if message
+      self.save
     end
 
     def attrs_simple
@@ -62,6 +74,47 @@ module KnowledgeCamp
 
     def stepped_field
       :"#{stepped_type.split("::").last.underscore}_id"
+    end
+
+    private
+
+    def move_content(dir, block_id)
+      return if !self.block_order.include?(block_id)
+
+      index = self.block_order.index(block_id)
+
+      up_first = index == 0 && dir == :up
+      down_last = index == self.block_order.size - 1 && dir == :down
+
+      return if up_first || down_last
+
+      new_index = case dir
+                  when :up then index - 1
+                  when :down then index + 1
+                  end
+
+      self.block_order.insert(new_index, self.block_order.delete_at(index))
+      self.save
+    end
+
+    def validate_continue
+      return if continue.nil?
+
+      keys = continue.keys
+
+      message = case continue[:type].to_s
+                when "end"
+                  cond = keys | [:type] == keys
+                  cond ? nil : "Invalid `:end' continue value!"
+                when "id"
+                  cond = keys | [:type, :id] == keys
+                  cond ? nil : "Invalid `:id' continue value!"
+                when "select"
+                  cond = keys | [:type, :question, :options] == keys
+                  cond ? nil : "Invalid `:select' continue value!"
+                end
+
+      errors.add(:continue, message) if message
     end
 
     module Owner

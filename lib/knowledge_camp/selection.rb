@@ -7,12 +7,12 @@ module KnowledgeCamp
     field :tail, :type => Integer
     field :hard, :type => Boolean, :default => false
 
-    belongs_to :step
+    belongs_to :block
 
     has_many :notes
     has_many :questions
 
-    validate :step_id, :presence => true
+    validate :block_id, :presence => true
 
     def self.create_or_merge(params)
       selections = all
