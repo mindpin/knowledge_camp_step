@@ -63,7 +63,6 @@ module KnowledgeCamp
       {
         :id            => self.id.to_s,
         :title         => self.title,
-        :desc          => self.desc,
         :blocks        => self.blocks.map(&:attrs),
         :continue      => continue,
         stepped_field  => self.stepped_id.to_s,
