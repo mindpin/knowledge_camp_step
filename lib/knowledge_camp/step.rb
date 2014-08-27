@@ -97,19 +97,19 @@ module KnowledgeCamp
     end
 
     def validate_continue
-      return if continue.nil?
+      return if continue.blank?
 
-      keys = continue.keys
+      keys = continue.keys.map(&:to_s)
 
       message = case continue[:type].to_s
                 when "end"
-                  cond = keys | [:type] == keys
+                  cond = keys | %W(type) == keys
                   cond ? nil : "Invalid `:end' continue value!"
                 when "id"
-                  cond = keys | [:type, :id] == keys
+                  cond = keys | %W(type id) == keys
                   cond ? nil : "Invalid `:id' continue value!"
                 when "select"
-                  cond = keys | [:type, :question, :options] == keys
+                  cond = keys | %W(type question options) == keys
                   cond ? nil : "Invalid `:select' continue value!"
                 end
 
