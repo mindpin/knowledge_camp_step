@@ -64,7 +64,7 @@ module KnowledgeCamp
         :id            => self.id.to_s,
         :title         => self.title,
         :desc          => self.desc,
-        :continue_type => continue_type,
+        :blocks        => self.blocks.map(&:attrs),
         :continue      => continue,
         stepped_field  => self.stepped_id.to_s,
         :created_at    => self.created_at,

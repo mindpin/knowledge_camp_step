@@ -7,5 +7,13 @@ module KnowledgeCamp
     field :content, :type => String
 
     has_many :selections
+
+    def attrs
+      {
+        :id      => self.id.to_s,
+        :kind    => self.kind,
+        :content => self.content
+      }
+    end
   end
 end
