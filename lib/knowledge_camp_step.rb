@@ -1,5 +1,7 @@
 require "mongoid"
 require "knowledge_camp/step/version"
+require "knowledge_camp/learn_record"
+require "knowledge_camp/has_many_learn_record"
 require "knowledge_camp/step"
 require "knowledge_camp/selection"
 require "knowledge_camp/note"

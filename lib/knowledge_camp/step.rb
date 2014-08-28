@@ -12,6 +12,7 @@ module KnowledgeCamp
     field :continue,    :type => Hash,  :default => {}
     field :block_order, :type => Array, :default => []
 
+    has_many :learn_records
     belongs_to :stepped, :polymorphic => true
 
     validate :validate_continue
@@ -61,13 +62,13 @@ module KnowledgeCamp
 
     def attrs
       {
-        :id            => self.id.to_s,
-        :title         => self.title,
-        :blocks        => self.blocks.map(&:attrs),
-        :continue      => continue,
-        stepped_field  => self.stepped_id.to_s,
-        :created_at    => self.created_at,
-        :updated_at    => self.updated_at
+        :id           => self.id.to_s,
+        :title        => self.title,
+        :blocks       => self.blocks.map(&:attrs),
+        :continue     => continue,
+        stepped_field => self.stepped_id.to_s,
+        :created_at   => self.created_at,
+        :updated_at   => self.updated_at
       }
     end
 
