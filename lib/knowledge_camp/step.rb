@@ -65,7 +65,7 @@ module KnowledgeCamp
     end
 
     def attrs_simple
-      {:id => self.id.to_s, :title => self.title}
+      {:id => self.id.to_s, :text => self.title}
     end
 
     def attrs
