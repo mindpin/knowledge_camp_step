@@ -10,9 +10,10 @@ module KnowledgeCamp
 
     def attrs
       {
-        :id      => self.id.to_s,
-        :kind    => self.kind,
-        :content => self.content
+        :id              => self.id.to_s,
+        :kind            => self.kind,
+        :content         => self.content,
+        :virtual_file_id => self.virtual_file_id
       }
     end
   end

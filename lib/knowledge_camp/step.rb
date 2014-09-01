@@ -20,7 +20,15 @@ module KnowledgeCamp
     default_scope ->{order(:id.asc)}
 
     def add_content(kind, content)
-      block = Block.create(:kind => kind, :content => content)
+      params = case kind.to_s
+               when "text"
+                 {:kind => kind, :content => content}
+               when "image", "video"
+                 {:kind => kind, :virtual_file_id => content}
+               end
+
+      block = Block.create(params)
+
       self.block_order << block.id.to_s
       self.save
       block
