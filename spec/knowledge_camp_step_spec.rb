@@ -70,42 +70,48 @@ module KnowledgeCamp
         args.map(&:id).map(&:to_s)
       end
 
-      it {expect(step1.blocks).to eq [block1, block2, block3]}
+      it {expect(step1.reload.blocks).to eq [block1, block2, block3]}
 
       context "move up block2" do
         before {step1.content_up(block2.id.to_s)}
 
-        it {expect(step1.blocks).to eq [block2, block1, block3]}
+        it {expect(step1.reload.blocks).to eq [block2, block1, block3]}
       end
 
       context "move down block2" do
         before {step1.content_down(block2.id.to_s)}
 
-        it {expect(step1.blocks).to eq [block1, block3, block2]}
+        it {expect(step1.reload.blocks).to eq [block1, block3, block2]}
       end
 
       context "move down block1" do
         before {step1.content_down(block1.id.to_s)}
 
-        it {expect(step1.blocks).to eq [block2, block1, block3]}
+        it {expect(step1.reload.blocks).to eq [block2, block1, block3]}
       end
 
       context "move up block1" do
         before {step1.content_up(block1.id.to_s)}
 
-        it {expect(step1.blocks).to eq [block1, block2, block3]}
+        it {expect(step1.reload.blocks).to eq [block1, block2, block3]}
       end
 
       context "move up block3" do
         before {step1.content_up(block3.id.to_s)}
 
-        it {expect(step1.blocks).to eq [block1, block3, block2]}
+        it {expect(step1.reload.blocks).to eq [block1, block3, block2]}
       end
 
       context "move down block3" do
         before {step1.content_down(block3.id.to_s)}
 
-        it {expect(step1.blocks).to eq [block1, block2, block3]}
+        it {expect(step1.reload.blocks).to eq [block1, block2, block3]}
+      end
+
+      context "remove block2" do
+        before {step1.remove_content(block2.id.to_s)}
+
+        it {expect(step1.reload.blocks).to eq [block1, block3]}
       end
     end
 

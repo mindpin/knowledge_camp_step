@@ -49,6 +49,7 @@ module KnowledgeCamp
     def remove_content(block_id)
       Block.find(block_id).destroy
       self.block_order.delete(block_id)
+      self.save
     end
 
     def set_continue(*args)
