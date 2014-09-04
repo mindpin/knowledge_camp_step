@@ -54,9 +54,15 @@ module KnowledgeCamp
     def set_continue(*args)
       case args[0]
       when "step", :step
-        self.continue = {:type => :step, :id => args[1]}
+        self.continue = {:type => :step, :id => args[1].to_s}
       when "select", :select
-        self.continue = {:type => :select}.merge(args[1])
+        param = args[1].clone
+
+        param[:options].each do |option|
+          option[:id] = option[:id].to_s
+        end
+
+        self.continue = {:type => :select}.merge(param)
       when false, :end, "end"
         self.continue = {:type => :end}
       end
