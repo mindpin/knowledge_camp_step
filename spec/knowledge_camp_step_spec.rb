@@ -12,7 +12,7 @@ module KnowledgeCamp
     let(:block3)  {step1.add_content("text", "b3")}
     let(:sel1)    {block1.selections.create(:head => 0, :tail => 8)}
     let(:sel2)    {block1.selections.create(:head => 14, :tail => 20, :hard => true)}
-    let(:note)    {sel1.notes.create(:creator => creator, :content => "content", :kind => "whatever")}
+    let(:note)    {sel1.notes.create(:creator => creator, :content => "content")}
     let(:ques)    {sel1.questions.create(:content => "Why?")}
 
     let(:end_cont)    {:end}

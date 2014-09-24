@@ -7,7 +7,7 @@ module KnowledgeCamp
 
     validates :step_id, :presence => true
     validates :step_id, :uniqueness => {:scope => :user_id}
-    
+
     def attrs
       {
         :id          => self.id.to_s,

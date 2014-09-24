@@ -6,7 +6,8 @@ module KnowledgeCamp
     field :kind,    :type => Symbol
     field :content, :type => String
 
-    has_many :selections
+    belongs_to :step
+    has_many   :selections
 
     def attrs
       {

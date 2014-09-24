@@ -1,16 +1,22 @@
 require "mongoid"
 require "knowledge_camp/step/version"
 require "knowledge_camp/block"
+require "knowledge_camp/selection_addons_with_step_id"
 require "knowledge_camp/note"
+require "knowledge_camp/question"
+require "knowledge_camp/step_with_default_block_and_selection"
 
 module KnowledgeCamp
+  NoContentBlock = Class.new(Exception)
+
   class Step
     include Mongoid::Document
     include Mongoid::Timestamps
+    include StepWithDefaultBlockAndSelection
 
     field :title,       :type => String
-    field :continue,    :type => Hash,  :default => {}
-    field :block_order, :type => Array, :default => []
+    field :continue,    :type => Hash,    :default => {}
+    field :block_order, :type => Array,   :default => []
 
     has_many :learn_records
     belongs_to :stepped, :polymorphic => true
@@ -34,6 +40,42 @@ module KnowledgeCamp
       block
     end
 
+    def default_block
+      blocks.first
+    end
+
+    def default_selection
+      return if default_block.blank?
+
+      criteria  = default_block.selections
+      selection = criteria.first
+
+      return selection if selection
+      size = default_block.content.to_s.size
+      tail = size == 0 ? 0 : size - 1
+      criteria.create(:head => 0, :tail => tail, :hard => false)
+    end
+
+    def note
+      default_selection && default_selection.notes.first
+    end
+
+    def question
+      default_selection && default_selection.questions.first
+    end
+
+    def note_id
+      note && note.id
+    end
+
+    def question_id
+      question && question.id
+    end
+
+    def is_hard?
+      default_selection && default_selection.hard
+    end
+    
     def blocks
       self.block_order.map {|id| Block.find(id)}
     end
@@ -83,8 +125,14 @@ module KnowledgeCamp
         :continue     => continue,
         stepped_field => self.stepped_id.to_s,
         :created_at   => self.created_at,
-        :updated_at   => self.updated_at
-      }
+        :updated_at   => self.updated_at,
+        :is_hard      => !!self.is_hard?
+      }.merge(self.question_id ?
+              {:question_id => self.question_id.to_s} :
+              {})
+       .merge(self.note_id ?
+              {:note_id => self.note_id.to_s} :
+              {})
     end
 
     def stepped_field
@@ -152,6 +200,16 @@ module KnowledgeCamp
 
         Note.belongs_to :creator,
                         :class_name => base.name
+      end
+    end
+
+    module QuestionCreator
+      def self.included(base)
+        base.has_many :questions,
+                      :class_name => Question.name
+
+        Question.belongs_to :creator,
+                            :class_name => base.name
       end
     end
   end
