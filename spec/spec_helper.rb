@@ -9,6 +9,8 @@ Mongoid.load!("./spec/mongoid.yml")
 class User
   include Mongoid::Document
   include KnowledgeCamp::Step::NoteCreator
+  include KnowledgeCamp::Step::QuestionCreator
+  include KnowledgeCamp::Step::SelectionCreator
 end
 
 class Stepped

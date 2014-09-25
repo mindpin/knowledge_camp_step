@@ -7,6 +7,7 @@ module KnowledgeCamp
     }
 
     def set_selection!
+      return if @step.blank?
       self.selection = @step.selection_of(creator)
     end
     
