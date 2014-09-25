@@ -40,24 +40,14 @@ module KnowledgeCamp
       block
     end
 
-    def is_hard=(bool)
-      selection = self.default_selection
-
-      return if !selection
-      selection.hard = bool
-
-      selection.save
-      bool
-    end
-
     def default_block
       blocks.first
     end
 
-    def default_selection
+    def selection_of(user)
       return if default_block.blank?
 
-      criteria  = default_block.selections
+      criteria  = default_block.selections.where(:creator_id => user.id)
       selection = criteria.first
 
       return selection if selection
@@ -66,20 +56,12 @@ module KnowledgeCamp
       criteria.create(:head => 0, :tail => tail, :hard => false)
     end
 
-    def note
-      default_selection && default_selection.notes.first
+    def note_of(user)
+      default_selection && selection_of(user).notes.first
     end
 
-    def question
-      default_selection && default_selection.questions.first
-    end
-
-    def note_id
-      note && note.id
-    end
-
-    def question_id
-      question && question.id
+    def question_of(user)
+      default_selection && selection_of(user).questions.first
     end
 
     def is_hard
@@ -135,14 +117,8 @@ module KnowledgeCamp
         :continue     => continue,
         stepped_field => self.stepped_id.to_s,
         :created_at   => self.created_at,
-        :updated_at   => self.updated_at,
-        :is_hard      => !!self.is_hard
-      }.merge(self.question_id ?
-              {:question_id => self.question_id.to_s} :
-              {})
-       .merge(self.note_id ?
-              {:note_id => self.note_id.to_s} :
-              {})
+        :updated_at   => self.updated_at
+      }
     end
 
     def stepped_field
@@ -220,6 +196,16 @@ module KnowledgeCamp
 
         Question.belongs_to :creator,
                             :class_name => base.name
+      end
+    end
+
+    module SelectionCreator
+      def self.included(base)
+        base.has_many :selections,
+                      :class_name => Selection.name
+
+        Selection.belongs_to :creator,
+                             :class_name => base.name
       end
     end
   end

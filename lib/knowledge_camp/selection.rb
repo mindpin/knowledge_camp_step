@@ -3,9 +3,9 @@ module KnowledgeCamp
     include Mongoid::Document
     include Mongoid::Timestamps
 
-    field :head, :type => Integer
-    field :tail, :type => Integer
-    field :hard, :type => Boolean, :default => false
+    field :head,    :type => Integer
+    field :tail,    :type => Integer
+    field :hard,    :type => Boolean, :default => false
 
     belongs_to :block
 

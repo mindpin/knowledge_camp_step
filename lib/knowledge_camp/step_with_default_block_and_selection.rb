@@ -4,10 +4,10 @@ module KnowledgeCamp
       blocks.first
     end
 
-    def default_selection
+    def selection_of(user)
       return if default_block.blank?
 
-      criteria  = default_block.selections
+      criteria  = default_block.selections.where(:creator_id => user.id)
       selection = criteria.first
 
       return selection if selection
@@ -16,24 +16,14 @@ module KnowledgeCamp
       criteria.create(:head => 0, :tail => tail, :hard => false)
     end
 
-    def note
-      default_selection && default_selection.notes.first
+    def note_of(user)
+      selection = selection_of(user)
+      selection && selection.notes.first
     end
 
-    def question
-      default_selection && default_selection.questions.first
-    end
-
-    def note_id
-      note && note.id
-    end
-
-    def question_id
-      question && question.id
-    end
-
-    def is_hard?
-      default_selection && default_selection.hard
+    def question_of(user)
+      selection = selection_of(user)
+      selection && selection.questions.first
     end
   end
 end
