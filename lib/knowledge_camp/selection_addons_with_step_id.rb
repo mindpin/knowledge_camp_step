@@ -10,6 +10,10 @@ module KnowledgeCamp
       return if @step.blank?
       self.selection = @step.selection_of(creator)
     end
+
+    def step
+      @step || selection.block.step
+    end
     
     def step_id=(sid)
       @step = Step.find(sid)
@@ -17,7 +21,7 @@ module KnowledgeCamp
     end
 
     def step_id
-      selection.block.step.id
+      step.id
     end
   end
 end
