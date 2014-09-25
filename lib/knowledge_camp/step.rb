@@ -40,34 +40,6 @@ module KnowledgeCamp
       block
     end
 
-    def default_block
-      blocks.first
-    end
-
-    def selection_of(user)
-      return if default_block.blank?
-
-      criteria  = default_block.selections.where(:creator_id => user.id)
-      selection = criteria.first
-
-      return selection if selection
-      size = default_block.content.to_s.size
-      tail = size == 0 ? 0 : size - 1
-      criteria.create(:head => 0, :tail => tail, :hard => false)
-    end
-
-    def note_of(user)
-      default_selection && selection_of(user).notes.first
-    end
-
-    def question_of(user)
-      default_selection && selection_of(user).questions.first
-    end
-
-    def is_hard
-      default_selection && default_selection.hard
-    end
-
     def blocks
       self.block_order.map {|id| Block.find(id)}
     end
