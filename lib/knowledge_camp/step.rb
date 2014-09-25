@@ -40,6 +40,16 @@ module KnowledgeCamp
       block
     end
 
+    def is_hard=(bool)
+      selection = self.default_selection
+
+      return if !selection
+      selection.hard = bool
+
+      selection.save
+      bool
+    end
+
     def default_block
       blocks.first
     end
@@ -72,10 +82,10 @@ module KnowledgeCamp
       question && question.id
     end
 
-    def is_hard?
+    def is_hard
       default_selection && default_selection.hard
     end
-    
+
     def blocks
       self.block_order.map {|id| Block.find(id)}
     end
@@ -126,7 +136,7 @@ module KnowledgeCamp
         stepped_field => self.stepped_id.to_s,
         :created_at   => self.created_at,
         :updated_at   => self.updated_at,
-        :is_hard      => !!self.is_hard?
+        :is_hard      => !!self.is_hard
       }.merge(self.question_id ?
               {:question_id => self.question_id.to_s} :
               {})
