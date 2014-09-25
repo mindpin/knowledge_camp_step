@@ -9,8 +9,8 @@ module KnowledgeCamp
 
     belongs_to :block
 
-    has_many :notes
-    has_many :questions
+    has_many :notes, :dependent => :destroy
+    has_many :questions, :dependent => :destroy
 
     validate :block_id, :presence => true
 

@@ -7,7 +7,7 @@ module KnowledgeCamp
     field :content, :type => String
 
     belongs_to :step
-    has_many   :selections
+    has_many   :selections, :dependent => :destroy
 
     def attrs
       {

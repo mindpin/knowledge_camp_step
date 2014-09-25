@@ -18,7 +18,9 @@ module KnowledgeCamp
     field :continue,    :type => Hash,    :default => {}
     field :block_order, :type => Array,   :default => []
 
-    has_many :learn_records
+    has_many :learn_records, :dependent => :destroy
+    has_many :blocks_collection, :class_name => Block.name, :dependent => :destroy
+
     belongs_to :stepped, :polymorphic => true
 
     validate :validate_continue
