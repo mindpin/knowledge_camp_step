@@ -33,7 +33,7 @@ module KnowledgeCamp
                  {:kind => kind, :virtual_file_id => content}
                end
 
-      block = Block.create(params)
+      block = Block.create(params.merge(:step => self))
 
       self.block_order << block.id.to_s
       self.save
