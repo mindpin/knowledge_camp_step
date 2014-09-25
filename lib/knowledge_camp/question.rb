@@ -8,9 +8,7 @@ module KnowledgeCamp
 
     belongs_to :selection
 
-    def step_id
-      selection.block.step.id
-    end
+    validates :content, :selection_id, :presence => true
 
     def attrs
       {
