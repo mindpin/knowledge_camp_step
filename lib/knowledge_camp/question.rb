@@ -14,7 +14,7 @@ module KnowledgeCamp
       {
         :id         => self.id.to_s,
         :content    => self.content,
-        :step_id    => self.step_id.to_s,
+        :step       => self.step.attrs,
         :created_at => self.created_at,
         :updated_at => self.updated_at
       }.merge(respond_to?(:creator_id) ?
