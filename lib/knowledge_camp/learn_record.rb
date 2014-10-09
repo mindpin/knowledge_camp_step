@@ -12,7 +12,7 @@ module KnowledgeCamp
       {
         :id          => self.id.to_s,
         :step_id     => self.step_id.to_s,
-        :created_at  => self.created_at.to_s
+        :created_at  => self.created_at
       }.merge(respond_to?(:user_id) ?
               {:user_id => self.user_id.to_s} :
               {})
