@@ -12,7 +12,7 @@ module KnowledgeCamp
     has_many :notes, :dependent => :destroy
     has_many :questions, :dependent => :destroy
 
-    validate :block_id, :presence => true
+    validates :block_id, :presence => true
 
     def self.create_or_merge(params)
       selections = all
@@ -36,7 +36,7 @@ module KnowledgeCamp
       selection.notes     = Note.where(:selection_id.in => selection_ids)
 
       selections.where(:id.ne => selection.id).destroy_all
-     
+
       selection
     end
   end
