@@ -5,7 +5,7 @@
 Add this line to your application's Gemfile:
 
 ```ruby
-gem "knowledge_camp_step", :github => "mindpin/knowledge_camp_step", :tag => "v0.0.1"
+gem "knowledge_camp_step", :github => "mindpin/knowledge_camp_step", :tag => "0.1.8"
 ```
 
 And then execute:
